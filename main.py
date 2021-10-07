@@ -41,7 +41,7 @@ control_de_senal_sinusoidal = False
 tiempo_de_latencia_de_un_punto_en_pantalla = 0
 
 # ------------------------------------#
-# Otras vaiables utiles#
+# Otras vaiables utiles  #
 # ------------------------------------##
 velocidad_rayo_z = 6.5 * pow(10, 6)
 carga_electron = -1.6 * (pow(10, -19))  # Referencia: Sear & Zemansky
@@ -52,6 +52,7 @@ tiempo_etapa_2 = distancia_entre_placasVH / velocidad_rayo_z
 tiempo_etapa_3 = tiempo_etapa_1
 tiempo_etapa_4 = distancia_entre_placaH_pantalla / velocidad_rayo_z
 potenical_aceptado = 1.2015 * pow(10, 14)
+potenical_aceptado_str = "1.2015e14 V"
 tonalidades_de_rayo = ["#F4ECF7",  '#E8DAEF', '#D2B4DE',
                        '#BB8FCE', '#A569BD', '#8E44AD',
                        '#7D3C98', '#6C3483', '#5B2C6F',
@@ -70,9 +71,10 @@ def calculo_de_movimiento_y(potencial_placa_horizontal):
                 masa_rayo * distancia_entre_placasH)) + velocidad_y * tiempo_etapa_4
 
 
-def comprobacion_de_voltaje(potencial_placa_horizontal):
-    if not (potenical_aceptado > potencial_placa_horizontal > -potenical_aceptado):
-        print(f"El potencial entre las placas deben estar entre -{potenical_aceptado}V y {potenical_aceptado}V")
+def comprobacion_de_voltaje(potencia_placa):
+    if not (potenical_aceptado > (potencia_placa) > -potenical_aceptado):
+        print(f"El potencial entre las placas deben estar entre -{potenical_aceptado} y {potenical_aceptado}")
+        print(f"El potencial ingresado fue, {potencia_placa}")
         return False
     return True
 
@@ -143,8 +145,7 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
         '''
         periodo_1 = math.pi * 2 / velocidad_angular_x
         periodo_2 = math.pi * 2 / velocidad_angular_y
-        if (periodo_1 < periodo_2):
-            periodo_1 = periodo_2
+        periodo_1 = periodo_1 * periodo_2
         '''
         GENERACION DE PUNTOS
         '''
@@ -175,4 +176,43 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
                                        interval=50, blit=False)
     plt.show()
     dataCollector.join()
-figuras_de_lisajous(1, 2, math.pi / 2, 100)
+def grafica_estandar():
+    potencial_placas_verticales=0
+    potencial_placas_horizontales=0
+    '''
+    grafica
+    '''
+    def coloca_puntos():
+        fig = plt.figure(figsize=(10, 8))
+        plt.xlim(-0.21, 0.21)
+        plt.ylim(-0.13, 0.13)
+        plt.scatter([calculo_de_movimiento_x(potencial_placas_verticales)], [calculo_de_movimiento_y(potencial_placas_horizontales)])
+        plt.show()
+    contador = 0
+    print("IMPORTANTE!: "
+          "A continuacion se pedira una serie de voltajes.Por favor, primero ingrese un numero no una operacion."
+          "\n\tEjemplos"
+          "\n\t\tCorrecto: 2"
+          "\n\t\tIncorrecto: 2*10^11"
+          "\n\t\tIncorrecto: 2e11"
+          "\nPosterior a ingresar al numero, podra ingresar una exponente para multiplicar el voltaje")
+    input("Enter para continuar...")
+    while True:
+        potencial_placas_verticales= float(input(f"Ingrese la diferencia de potencial entre las placas verticales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str})"))
+        exponente_potencial_placas_verticales = float(input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
+        potencial_placas_verticales = potencial_placas_verticales*pow(10, exponente_potencial_placas_verticales)
+        potencial_placas_horizontales = float(input(f"Ingrese la diferencia de potencial entre las placas horizontales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str})"))
+        exponente_potencial_placas_horizontales = float(input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
+        potencial_placas_horizontales = potencial_placas_horizontales * pow(10, exponente_potencial_placas_horizontales)
+        if(comprobacion_de_voltaje(potencial_placas_horizontales) and comprobacion_de_voltaje(
+                potencial_placas_verticales)):
+            print("Cierre la ventana de la grafica para continuar...")
+            if(contador==0):
+                contador = 1
+            coloca_puntos()
+        res = input("Desea salir (cambiar a modo senusoidal)o cambiar los valores de potencial? (\"S\" para salir; Entere para cambiar)")
+        if (res.lower()=="s"):
+            break
+
+figuras_de_lisajous(2, 3, 3*math.pi / 4, 100)
+#grafica_estandar()

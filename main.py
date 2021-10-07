@@ -13,10 +13,8 @@ Aceleracion Entre placas: a = abs(q)*V/(md)
 import math
 import time
 import numpy as np
-from matplotlib import pyplot as plt
 from matplotlib import animation as animation
 import threading
-
 from matplotlib import pyplot as plt
 
 # ------------------------------------#
@@ -30,15 +28,6 @@ distancia_entre_placasV = 0.1
 distancia_entre_placasH = 0.1
 distancia_entre_placasVH = 0.05
 distancia_entre_placaH_pantalla = 0.2
-# ------------------------------------#
-# Variables controladas por el usuario#
-# ------------------------------------#
-voltaje_de_aceleracion_de_electrones = 0
-voltaje_de_placas_de_deflexion_verticales = 0
-voltaje_de_placas_de_deflexion_horizontales = 0
-boton_de_cambio_de_modo = False
-control_de_senal_sinusoidal = False
-tiempo_de_latencia_de_un_punto_en_pantalla = 0
 
 # ------------------------------------#
 # Otras vaiables utiles  #
@@ -146,7 +135,7 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
         '''
         periodo_1 = math.pi * 2 / velocidad_angular_x
         periodo_2 = math.pi * 2 / velocidad_angular_y
-        periodo_1 = periodo_1 * periodo_2*periodo
+        periodo_1 = periodo_1 * periodo_2 * periodo
         '''
         GENERACION DE PUNTOS
         '''
@@ -224,7 +213,6 @@ def grafica_estandar(index_color):
         coloca_puntos()
 
 
-
 '''
 
 Menu principal
@@ -250,18 +238,18 @@ while True:
         '''
         salir = False
         while not salir:
-            brillo_index=0
-            #Eleccion de intensidad del color de dibujo
+            brillo_index = 0
+            # Eleccion de intensidad del color de dibujo
             while True:
                 res = int(input("De 1 a 10 que tan alto desea el voltaje de aceleracion: "))
-                if res==1 or res==2 or res==3 or res==4 or res==5 or res==6 or res==7 or res==8 or res==9 or res==10:
-                    brillo_index = res-1
+                if res == 1 or res == 2 or res == 3 or res == 4 or res == 5 or res == 6 or res == 7 or res == 8 or res == 9 or res == 10:
+                    brillo_index = res - 1
                     break
                 else:
                     print("Ingrese un numero valido de 1 a 10(entero) ")
-            #Eleccion de voltajes dentro de funcion
+            # Eleccion de voltajes dentro de funcion
             grafica_estandar(brillo_index)
-            #Salida
+            # Salida
             while True:
                 res = input("Desea cambiar al modo de cambio de voltaje si o no (s/n): ")
                 if (res.lower() == "s"):
@@ -279,27 +267,30 @@ while True:
         '''
         salir = False
         while not salir:
-            print("Ha ingresado al modo sinusoidal!\nEn funcion de crear alguna figura de Lissajous, ingrese la siguiente info.")
+            print(
+                "Ha ingresado al modo sinusoidal!\nEn funcion de crear alguna figura de Lissajous, ingrese la siguiente info.")
             velocidad_angular_x = 0
             while True:
-                print("Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas verticales (movimiento en x)")
-                velocidad_angular_x_str=input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
-                if velocidad_angular_x_str=="1" or velocidad_angular_x_str=="2" or velocidad_angular_x_str=="3" or velocidad_angular_x_str=="4" or velocidad_angular_x_str=="5":
+                print(
+                    "Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas verticales (movimiento en x)")
+                velocidad_angular_x_str = input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
+                if velocidad_angular_x_str == "1" or velocidad_angular_x_str == "2" or velocidad_angular_x_str == "3" or velocidad_angular_x_str == "4" or velocidad_angular_x_str == "5":
                     velocidad_angular_x = int(velocidad_angular_x_str)
                     break
-                elif velocidad_angular_x_str== "6":
+                elif velocidad_angular_x_str == "6":
                     velocidad_angular_x_str = float(input("Ingrese velocidad personalizada: "))
                     break
                 else:
                     print("Ingrese una opcion valida (indices del 1 al 6)")
             velocidad_angular_y = 0
             while True:
-                print("Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas horizontales (movimiento en y)")
-                velocidad_angular_y_str=input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
-                if velocidad_angular_y_str=="1" or velocidad_angular_y_str=="2" or velocidad_angular_y_str=="3" or velocidad_angular_y_str=="4" or velocidad_angular_y_str=="5":
+                print(
+                    "Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas horizontales (movimiento en y)")
+                velocidad_angular_y_str = input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
+                if velocidad_angular_y_str == "1" or velocidad_angular_y_str == "2" or velocidad_angular_y_str == "3" or velocidad_angular_y_str == "4" or velocidad_angular_y_str == "5":
                     velocidad_angular_y = int(velocidad_angular_y_str)
                     break
-                elif velocidad_angular_y_str== "6":
+                elif velocidad_angular_y_str == "6":
                     velocidad_angular_y = float(input("Ingrese velocidad personalizada: "))
                     break
                 else:
@@ -308,19 +299,19 @@ while True:
             while True:
                 print("Ingrese el indice del desfase que desea: ")
                 desfase_str = str(input("1) 0 \n2) pi/4 \n3) pi/2 \n4) 3pi/4 \n5) pi\n"))
-                if(desfase_str=="1"):
+                if (desfase_str == "1"):
                     desfase = 0
                     break
-                elif(desfase_str == "2"):
-                    desfase = math.pi/4
+                elif (desfase_str == "2"):
+                    desfase = math.pi / 4
                     break
-                elif(desfase_str == "3"):
-                    desfase = math.pi/2
+                elif (desfase_str == "3"):
+                    desfase = math.pi / 2
                     break
-                elif(desfase_str == "4"):
-                    desfase = 3*math.pi / 4
+                elif (desfase_str == "4"):
+                    desfase = 3 * math.pi / 4
                     break
-                elif(desfase_str == "5"):
+                elif (desfase_str == "5"):
                     desfase = math.pi
                     break
                 else:
@@ -329,18 +320,19 @@ while True:
             periodo = 1
             figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desfase, 200, periodo)
             while True:
-                if (str(input("Si no se termino de formar la figura esperada ingrese \"s\" (si, esta conforme Presione enter)")).lower()=="s"):
-                    periodo = periodo*2
+                if (str(input(
+                        "Si no se termino de formar la figura esperada ingrese \"s\" (si, esta conforme Presione enter)")).lower() == "s"):
+                    periodo = periodo * 2
                     figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desfase, 200, periodo)
                 else:
                     break
 
             while True:
                 res = input("Desea cambiar al modo de cambio de voltaje si o no (s/n): ")
-                if(res.lower() =="s"):
+                if (res.lower() == "s"):
                     salir = True
                     break
-                elif(res.lower() == "n"):
+                elif (res.lower() == "n"):
                     salir = False
                     break
                 else:

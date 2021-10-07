@@ -53,7 +53,7 @@ tiempo_etapa_3 = tiempo_etapa_1
 tiempo_etapa_4 = distancia_entre_placaH_pantalla / velocidad_rayo_z
 potenical_aceptado = 1.2015 * pow(10, 14)
 potenical_aceptado_str = "1.2015e14 V"
-tonalidades_de_rayo = ["#F4ECF7",  '#E8DAEF', '#D2B4DE',
+tonalidades_de_rayo = ["#F4ECF7", '#E8DAEF', '#D2B4DE',
                        '#BB8FCE', '#A569BD', '#8E44AD',
                        '#7D3C98', '#6C3483', '#5B2C6F',
                        '#4A235A']
@@ -62,13 +62,13 @@ tonalidades_de_rayo = ["#F4ECF7",  '#E8DAEF', '#D2B4DE',
 def calculo_de_movimiento_x(potencial_placa_vertical):
     velocidad_x = abs(carga_rayo) * potencial_placa_vertical * tiempo_etapa_1 / (masa_rayo * distancia_entre_placasV)
     return (0.5 * abs(carga_rayo) * potencial_placa_vertical * pow(tiempo_etapa_1, 2) / (
-                masa_rayo * distancia_entre_placasV)) + velocidad_x * (tiempo_etapa_2 + tiempo_etapa_3 + tiempo_etapa_4)
+            masa_rayo * distancia_entre_placasV)) + velocidad_x * (tiempo_etapa_2 + tiempo_etapa_3 + tiempo_etapa_4)
 
 
 def calculo_de_movimiento_y(potencial_placa_horizontal):
     velocidad_y = abs(carga_rayo) * potencial_placa_horizontal * tiempo_etapa_3 / (masa_rayo * distancia_entre_placasH)
     return (0.5 * abs(carga_rayo) * potencial_placa_horizontal * pow(tiempo_etapa_3, 2) / (
-                masa_rayo * distancia_entre_placasH)) + velocidad_y * tiempo_etapa_4
+            masa_rayo * distancia_entre_placasH)) + velocidad_y * tiempo_etapa_4
 
 
 def comprobacion_de_voltaje(potencia_placa):
@@ -95,7 +95,7 @@ def trayectoria_de_una_particula(potencial_placa_vertical, potencial_placa_horiz
         return [0, 0]
 
 
-def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento_y, continuidad):
+def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento_y, continuidad, periodo):
     '''
 
     :param velocidad_angular_x: velocidad angular para MAS en x  Del 1 al 5
@@ -115,6 +115,7 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
     '''
     Toda la generacion de datos
     '''
+
     def GetData(out_data):
         '''
 
@@ -145,21 +146,23 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
         '''
         periodo_1 = math.pi * 2 / velocidad_angular_x
         periodo_2 = math.pi * 2 / velocidad_angular_y
-        periodo_1 = periodo_1 * periodo_2
+        periodo_1 = periodo_1 * periodo_2*periodo
         '''
         GENERACION DE PUNTOS
         '''
         tiempo = 0
         intervalo_tiempo = periodo_1 / continuidad
-        out_data[0].append(calculo_de_movimiento_x(potenical_aceptado*math.cos(velocidad_angular_x * tiempo)))
-        out_data[1].append(calculo_de_movimiento_y(potenical_aceptado*math.cos(velocidad_angular_y * tiempo + desplazamiento_y)))
+        out_data[0].append(calculo_de_movimiento_x(potenical_aceptado * math.cos(velocidad_angular_x * tiempo)))
+        out_data[1].append(
+            calculo_de_movimiento_y(potenical_aceptado * math.cos(velocidad_angular_y * tiempo + desplazamiento_y)))
         for i in range(continuidad):
             tiempo += intervalo_tiempo
             out_data[0].append(calculo_de_movimiento_x(potenical_aceptado * math.cos(velocidad_angular_x * tiempo)))
-            out_data[1].append(calculo_de_movimiento_y(potenical_aceptado * math.cos(velocidad_angular_y * tiempo + desplazamiento_y)))
+            out_data[1].append(
+                calculo_de_movimiento_y(potenical_aceptado * math.cos(velocidad_angular_y * tiempo + desplazamiento_y)))
             time.sleep(0.1)
 
-    dataCollector = threading.Thread(target= GetData, args=(gData,) )
+    dataCollector = threading.Thread(target=GetData, args=(gData,))
     dataCollector.start()
 
     def update_line(num, hl, data):
@@ -172,22 +175,28 @@ def figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desplazamiento
     plt.xlim(-0.21, 0.21)
     plt.ylim(-0.13, 0.13)
     hl, = plt.plot(gData[0], gData[1])
-    line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData ),
+    line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData),
                                        interval=50, blit=False)
     plt.show()
     dataCollector.join()
-def grafica_estandar():
-    potencial_placas_verticales=0
-    potencial_placas_horizontales=0
+
+
+def grafica_estandar(index_color):
+    potencial_placas_verticales = 0
+    potencial_placas_horizontales = 0
+    color = tonalidades_de_rayo[index_color]
     '''
     grafica
     '''
+
     def coloca_puntos():
         fig = plt.figure(figsize=(10, 8))
         plt.xlim(-0.21, 0.21)
         plt.ylim(-0.13, 0.13)
-        plt.scatter([calculo_de_movimiento_x(potencial_placas_verticales)], [calculo_de_movimiento_y(potencial_placas_horizontales)])
+        plt.scatter([calculo_de_movimiento_x(potencial_placas_verticales)],
+                    [calculo_de_movimiento_y(potencial_placas_horizontales)], c=color)
         plt.show()
+
     contador = 0
     print("IMPORTANTE!: "
           "A continuacion se pedira una serie de voltajes.Por favor, primero ingrese un numero no una operacion."
@@ -197,22 +206,145 @@ def grafica_estandar():
           "\n\t\tIncorrecto: 2e11"
           "\nPosterior a ingresar al numero, podra ingresar una exponente para multiplicar el voltaje")
     input("Enter para continuar...")
-    while True:
-        potencial_placas_verticales= float(input(f"Ingrese la diferencia de potencial entre las placas verticales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str})"))
-        exponente_potencial_placas_verticales = float(input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
-        potencial_placas_verticales = potencial_placas_verticales*pow(10, exponente_potencial_placas_verticales)
-        potencial_placas_horizontales = float(input(f"Ingrese la diferencia de potencial entre las placas horizontales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str})"))
-        exponente_potencial_placas_horizontales = float(input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
-        potencial_placas_horizontales = potencial_placas_horizontales * pow(10, exponente_potencial_placas_horizontales)
-        if(comprobacion_de_voltaje(potencial_placas_horizontales) and comprobacion_de_voltaje(
-                potencial_placas_verticales)):
-            print("Cierre la ventana de la grafica para continuar...")
-            if(contador==0):
-                contador = 1
-            coloca_puntos()
-        res = input("Desea salir (cambiar a modo senusoidal)o cambiar los valores de potencial? (\"S\" para salir; Entere para cambiar)")
-        if (res.lower()=="s"):
-            break
+    potencial_placas_verticales = float(input(
+        f"Ingrese la diferencia de potencial entre las placas verticales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str}): "))
+    exponente_potencial_placas_verticales = float(
+        input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
+    potencial_placas_verticales = potencial_placas_verticales * pow(10, exponente_potencial_placas_verticales)
+    potencial_placas_horizontales = float(input(
+        f"Ingrese la diferencia de potencial entre las placas horizontales (debe estar entre -{potenical_aceptado_str} y {potenical_aceptado_str}): "))
+    exponente_potencial_placas_horizontales = float(
+        input("Ingrese el exponente, el potencial sera multiplicado por 10^... "))
+    potencial_placas_horizontales = potencial_placas_horizontales * pow(10, exponente_potencial_placas_horizontales)
+    if (comprobacion_de_voltaje(potencial_placas_horizontales) and comprobacion_de_voltaje(
+            potencial_placas_verticales)):
+        print("Cierre la ventana de la grafica para continuar...")
+        if (contador == 0):
+            contador = 1
+        coloca_puntos()
 
-figuras_de_lisajous(2, 3, 3*math.pi / 4, 100)
-#grafica_estandar()
+
+
+'''
+
+Menu principal
+
+'''
+modo_voltajes = True  # Si modo =True (puede cambiar el voltaje), si modo= False senosoidal activado
+while True:
+    mod = int(
+        input("Ingrese el indice del modo que desea activar:\n1) Cambiar voltaje entre placas\n2) Modo Sinusoisal\n "))
+    if (mod == 1):
+        modo_voltajes = True
+        break
+    elif (mod == 2):
+        modo_voltajes = False
+        break
+    else:
+        print("Ingrese un indice valido (\"1\" o \"2\")")
+
+while True:
+    if modo_voltajes:
+        '''
+        Modo voltajes
+        '''
+        salir = False
+        while not salir:
+            brillo_index=0
+            #Eleccion de intensidad del color de dibujo
+            while True:
+                res = int(input("De 1 a 10 que tan alto desea el voltaje de aceleracion: "))
+                if res==1 or res==2 or res==3 or res==4 or res==5 or res==6 or res==7 or res==8 or res==9 or res==10:
+                    brillo_index = res-1
+                    break
+                else:
+                    print("Ingrese un numero valido de 1 a 10(entero) ")
+            #Eleccion de voltajes dentro de funcion
+            grafica_estandar(brillo_index)
+            #Salida
+            while True:
+                res = input("Desea cambiar al modo de cambio de voltaje si o no (s/n): ")
+                if (res.lower() == "s"):
+                    salir = True
+                    break
+                elif (res.lower() == "n"):
+                    salir = False
+                    break
+                else:
+                    print("Ingrese una opcion valida")
+
+    else:
+        '''
+        Modo sinusoidal
+        '''
+        salir = False
+        while not salir:
+            print("Ha ingresado al modo sinusoidal!\nEn funcion de crear alguna figura de Lissajous, ingrese la siguiente info.")
+            velocidad_angular_x = 0
+            while True:
+                print("Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas verticales (movimiento en x)")
+                velocidad_angular_x_str=input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
+                if velocidad_angular_x_str=="1" or velocidad_angular_x_str=="2" or velocidad_angular_x_str=="3" or velocidad_angular_x_str=="4" or velocidad_angular_x_str=="5":
+                    velocidad_angular_x = int(velocidad_angular_x_str)
+                    break
+                elif velocidad_angular_x_str== "6":
+                    velocidad_angular_x_str = float(input("Ingrese velocidad personalizada: "))
+                    break
+                else:
+                    print("Ingrese una opcion valida (indices del 1 al 6)")
+            velocidad_angular_y = 0
+            while True:
+                print("Ingrese una de las siguientes opciones para velocidad angular, para aplicar en el voltaje de placas horizontales (movimiento en y)")
+                velocidad_angular_y_str=input("1) 1\n2) 2\n3) 3\n4) 4\n5) 5\n6) Otra...\n")
+                if velocidad_angular_y_str=="1" or velocidad_angular_y_str=="2" or velocidad_angular_y_str=="3" or velocidad_angular_y_str=="4" or velocidad_angular_y_str=="5":
+                    velocidad_angular_y = int(velocidad_angular_y_str)
+                    break
+                elif velocidad_angular_y_str== "6":
+                    velocidad_angular_y = float(input("Ingrese velocidad personalizada: "))
+                    break
+                else:
+                    print("Ingrese una opcion valida (indices del 1 al 6)")
+            desfase = 0
+            while True:
+                print("Ingrese el indice del desfase que desea: ")
+                desfase_str = str(input("1) 0 \n2) pi/4 \n3) pi/2 \n4) 3pi/4 \n5) pi\n"))
+                if(desfase_str=="1"):
+                    desfase = 0
+                    break
+                elif(desfase_str == "2"):
+                    desfase = math.pi/4
+                    break
+                elif(desfase_str == "3"):
+                    desfase = math.pi/2
+                    break
+                elif(desfase_str == "4"):
+                    desfase = 3*math.pi / 4
+                    break
+                elif(desfase_str == "5"):
+                    desfase = math.pi
+                    break
+                else:
+                    print("ingrese una opcion valida")
+            print("Para continuar con el programa cierre la ventana")
+            periodo = 1
+            figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desfase, 200, periodo)
+            while True:
+                if (str(input("Si no se termino de formar la figura esperada ingrese \"s\" (si, esta conforme Presione enter)")).lower()=="s"):
+                    periodo = periodo*2
+                    figuras_de_lisajous(velocidad_angular_x, velocidad_angular_y, desfase, 200, periodo)
+                else:
+                    break
+
+            while True:
+                res = input("Desea cambiar al modo de cambio de voltaje si o no (s/n): ")
+                if(res.lower() =="s"):
+                    salir = True
+                    break
+                elif(res.lower() == "n"):
+                    salir = False
+                    break
+                else:
+                    print("Ingrese una opcion valida")
+    modo_voltajes = not modo_voltajes
+    if input("Ingese \"s\" para salir, enter para continuar: ").lower() == "s":
+        break

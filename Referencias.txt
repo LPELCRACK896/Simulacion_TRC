@@ -1,0 +1,6 @@
+https://youtu.be/dH1nzWn62OY
+https://www.laboratoriogluon.com/grafica-tiempo-real-con-python/
+https://www.datacamp.com/community/tutorials/python-time-sleep?utm_source=adwords_ppc&utm_campaignid=1455363063&utm_adgroupid=65083631748&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=278443377086&utm_targetid=dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1007583&gclid=CjwKCAjwkvWKBhB4EiwA-GHjFpVERhgIjKBlxR4L1UFaaJh01XHXA_2sx_30ge1O3VyQMUeNkstVFhoCxZUQAvD_BwE
+https://www.it-swarm-es.com/es/python/matplotlib-como-cambiar-el-color-de-los-puntos-de-datos-en-funcion-de-alguna-variable/941533090/
+https://es.stackoverflow.com/questions/228637/cambiar-color-de-los-puntos-en-matplotlib-python-3-6
+https://www.delftstack.com/es/howto/matplotlib/plot-data-as-points-matplotlib/
